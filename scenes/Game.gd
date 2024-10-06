@@ -1,11 +1,13 @@
 extends Node2D
 
+#song URL
+#https://www.beepbox.co/#9n31s0k0l00e0ft2ca7g0fj07r1i0o432T1v1uc0f10l7q011d23A4F3B5Q0506Pd474E361963279T1v1uf1f1102q0z10v321d07A1F0B0Q1845Pe354E4bj61362463aT1v1uc5f0q8111d23A0F0B3Q5000Pf800E0T4v1u04f0qwx10n611z6666ji8k8k3jSBKSJJAArriiiiii07JCABrzrrrrrrr00YrkqHrsrrrrjr005zrAqzrjzrrqr1jRjrqGGrrzsrsA099ijrABJJJIAzrrtirqrqjqixzsrAjrqjiqaqqysttAJqjikikrizrHtBJJAzArzrIsRCITKSS099ijrAJS____Qg99habbCAYrDzh00E1b6b0000018i4x8z8Ocz8Oc010004x8i4x80014h8y8y8xgp22uFHY5ljkqZQ3duyERUaA2CzV4th7ihOx70CLohRqN7ohQAtxMtx7ohPnAOeEUeAzG8VQZp7os65dvWAHU4WvmFduKIRM9HFB0yCwUCwFEatUFwiCEFEaqyCEFGaq2CPalgFjagkR5d1jBkkV1jkkQ5cRW2CwXA0
 
 var enemy_count = 0
 
 var ally_count = 3
 
-var wave_count = 50
+var wave_count = 0
 
 export(String)var creature_path
 
@@ -30,6 +32,8 @@ func _process(delta):
 
 
 func spawn_enemy_wawe(creature_count = 4):
+	
+	$NewWavePlayer.play()
 	
 	for index in creature_count:
 		spawn_creature(Vector2(1000,1000).rotated(deg2rad(rand_range(0,360))))

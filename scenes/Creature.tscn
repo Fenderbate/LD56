@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=44 format=2]
 
 [ext_resource path="res://scenes/Creature.gd" type="Script" id=1]
 [ext_resource path="res://sprites/ally_face.png" type="Texture" id=2]
@@ -7,6 +7,17 @@
 [ext_resource path="res://sprites/reteating_test.png" type="Texture" id=5]
 [ext_resource path="res://misc/fonts/font.tres" type="DynamicFont" id=6]
 [ext_resource path="res://sprites/particle.png" type="Texture" id=7]
+[ext_resource path="res://sounds/hitHurt4.wav" type="AudioStream" id=8]
+[ext_resource path="res://sounds/hitHurt1.wav" type="AudioStream" id=9]
+[ext_resource path="res://sounds/hitHurt3.wav" type="AudioStream" id=10]
+[ext_resource path="res://sounds/hitHurt2.wav" type="AudioStream" id=11]
+[ext_resource path="res://sounds/powerUp.wav" type="AudioStream" id=12]
+[ext_resource path="res://sounds/powerUp3.wav" type="AudioStream" id=13]
+[ext_resource path="res://sounds/powerUp2.wav" type="AudioStream" id=14]
+[ext_resource path="res://sounds/dead.wav" type="AudioStream" id=15]
+[ext_resource path="res://sounds/eat1.wav" type="AudioStream" id=16]
+[ext_resource path="res://sounds/eat3.wav" type="AudioStream" id=17]
+[ext_resource path="res://sounds/eat2.wav" type="AudioStream" id=18]
 
 [sub_resource type="PhysicsMaterial" id=3]
 friction = 0.75
@@ -14,10 +25,14 @@ rough = true
 bounce = 0.5
 absorbent = true
 
+[sub_resource type="Gradient" id=30]
+offsets = PoolRealArray( 0, 0.893855, 1 )
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 )
+
 [sub_resource type="CircleShape2D" id=19]
 radius = 50.0
 
-[sub_resource type="CircleShape2D" id=2]
+[sub_resource type="CircleShape2D" id=29]
 
 [sub_resource type="CircleShape2D" id=20]
 radius = 4000.0
@@ -180,6 +195,18 @@ tracks/6/keys = {
 "update": 1,
 "values": [ 1 ]
 }
+tracks/7/type = "value"
+tracks/7/path = NodePath("../Polygon2D/ConsumeParticles:emitting")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
 
 [sub_resource type="Animation" id=24]
 resource_name = "attack"
@@ -260,6 +287,18 @@ tracks/3/keys = {
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("../Polygon2D/ConsumeParticles:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
 }
 
 [sub_resource type="Animation" id=25]
@@ -443,6 +482,25 @@ speed = 500.0
 texture = ExtResource( 5 )
 polygon = PoolVector2Array( 0, 64, 48, 48, 64, 0, 48, -48, 0, -64, -48, -48, -64, 0, -48, 48 )
 
+[node name="ConsumeParticles" type="CPUParticles2D" parent="Polygon2D"]
+emitting = false
+amount = 16
+one_shot = true
+speed_scale = 2.0
+explosiveness = 1.0
+randomness = 1.0
+lifetime_randomness = 0.15
+fixed_fps = 60
+texture = ExtResource( 7 )
+emission_shape = 1
+emission_sphere_radius = 64.0
+direction = Vector2( 0, -1 )
+gravity = Vector2( 0, 200 )
+initial_velocity = 200.0
+initial_velocity_random = 1.0
+scale_amount_random = 1.0
+color_ramp = SubResource( 30 )
+
 [node name="Shape" type="CollisionShape2D" parent="."]
 shape = SubResource( 19 )
 
@@ -451,7 +509,7 @@ visible = false
 collision_layer = 0
 
 [node name="VisionShape" type="CollisionShape2D" parent="VisionArea"]
-shape = SubResource( 2 )
+shape = SubResource( 29 )
 
 [node name="DeadCheckArea" type="Area2D" parent="."]
 visible = false
@@ -637,6 +695,50 @@ anims/consumed = SubResource( 26 )
 anims/dead = SubResource( 25 )
 anims/spawn = SubResource( 27 )
 anims/upgrade = SubResource( 22 )
+
+[node name="HitSounds" type="Node" parent="."]
+
+[node name="HitSound1" type="AudioStreamPlayer" parent="HitSounds"]
+stream = ExtResource( 9 )
+
+[node name="HitSound2" type="AudioStreamPlayer" parent="HitSounds"]
+stream = ExtResource( 11 )
+
+[node name="HitSound3" type="AudioStreamPlayer" parent="HitSounds"]
+stream = ExtResource( 10 )
+
+[node name="HitSound4" type="AudioStreamPlayer" parent="HitSounds"]
+stream = ExtResource( 8 )
+
+[node name="LevelUpSounds" type="Node" parent="."]
+
+[node name="Up1" type="AudioStreamPlayer" parent="LevelUpSounds"]
+stream = ExtResource( 14 )
+volume_db = -16.0
+
+[node name="Up2" type="AudioStreamPlayer" parent="LevelUpSounds"]
+stream = ExtResource( 13 )
+volume_db = -16.0
+
+[node name="Up3" type="AudioStreamPlayer" parent="LevelUpSounds"]
+stream = ExtResource( 12 )
+volume_db = -8.0
+
+[node name="DeathSounds" type="Node" parent="."]
+
+[node name="Sound1" type="AudioStreamPlayer" parent="DeathSounds"]
+stream = ExtResource( 15 )
+
+[node name="EatSounds" type="Node" parent="."]
+
+[node name="Sound1" type="AudioStreamPlayer" parent="EatSounds"]
+stream = ExtResource( 16 )
+
+[node name="Sound2" type="AudioStreamPlayer" parent="EatSounds"]
+stream = ExtResource( 18 )
+
+[node name="Sound3" type="AudioStreamPlayer" parent="EatSounds"]
+stream = ExtResource( 17 )
 
 [connection signal="body_entered" from="." to="." method="_on_Creature_body_entered"]
 [connection signal="body_entered" from="VisionArea" to="." method="_on_VisionArea_body_entered"]

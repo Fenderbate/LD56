@@ -60,9 +60,9 @@ func _ready():
 	
 	match char_type:
 		TYPE.ENEMY:
-			$Polygon2D.self_modulate = Color("F94144")
+			$Polygon2D.modulate = Color("F94144")
 		TYPE.ALLY:
-			$Polygon2D.self_modulate = Color("F9C74F")
+			$Polygon2D.modulate = Color("F9C74F")
 	
 	$VisionArea/VisionShape.shape.radius = vision_range
 	
@@ -165,6 +165,7 @@ func hurt(damage : int, hurt_by : RigidBody2D = null):
 		add_to_group("dead_creature")
 		dead = true
 		$AnimTimer.stop()
+		$DeathSounds.get_children()[randi() % $DeathSounds.get_child_count()].play()
 		Global.emit_signal("creature_dead",char_type)
 		if self.char_type == TYPE.ENEMY:
 			$FaceSprite.texture = load("res://sprites/enemy_face_dead.png")
@@ -192,9 +193,11 @@ func consume(consume_target):
 	
 	print("make eating animation, and eaten sprite")
 	
+	$EatSounds.get_children()[randi() % $EatSounds.get_child_count()].play()
+	
 	if self.char_type == TYPE.ALLY:
 		health += 1 if health != max_health else 0
-	update_level(1)#return consume_target.levels if levels > 0 else 1
+		update_level(1)#return consume_target.levels if levels > 0 else 1
 	
 func update_level(levels_to_add : int):
 	
@@ -223,6 +226,7 @@ func update_level(levels_to_add : int):
 	
 	if levels_to_add < 0:
 		$Animations/AnimationPlayer.play("upgrade")
+		$LevelUpSounds.get_children()[randi() % $LevelUpSounds.get_child_count()].play()
 		
 		#$UpgradeParticles.emission_sphere_radius = $Shape.shape.radius
 		#$UpgradeParticles.restart()
@@ -369,6 +373,7 @@ func _on_Creature_body_entered(body):
 			if !body.dead:
 				body.apply_central_impulse(global_position.direction_to(body.global_position)* knockback)
 				body.hurt(damage,self)
+				$HitSounds.get_children()[randi() % $HitSounds.get_child_count()].play()
 				$Animations/AnimationPlayer.play("attack")
 			elif body.dead:
 				consume(body)
