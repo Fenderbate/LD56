@@ -318,7 +318,10 @@ func upgrade_size():
 
 func upgrade_damage():
 	
-	$FaceSprite.texture = load("res://sprites/ally_face_damage.png")
+	if self.char_type == TYPE.ALLY:
+		$FaceSprite.texture = load("res://sprites/ally_face_damage.png")
+	else:
+		$FaceSprite.texture = load("res://sprites/enemy_face_damage.png")
 	#sprite_anim_offset += 4
 	damage += 1
 	knockback += 100
