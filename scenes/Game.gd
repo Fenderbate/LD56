@@ -162,14 +162,18 @@ func _on_SoundSlider_value_changed(value):
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Sound"),-25 + 25 * value)
 	if value == -1:
 		AudioServer.set_bus_mute(AudioServer.get_bus_index("Sound"),true)
+		$Camera2D/Canvas/UI/AudiConteiner/SoundContainer/SoundIcon.texture = load("res://sprites/sound_icon_mute.png")
 	else:
 		AudioServer.set_bus_mute(AudioServer.get_bus_index("Sound"),false)
+		$Camera2D/Canvas/UI/AudiConteiner/SoundContainer/SoundIcon.texture = load("res://sprites/sound_icon.png")
 
 func _on_MusicSlider_value_changed(value):
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"),-25 + 25 * value)
 	if value == -1:
 		AudioServer.set_bus_mute(AudioServer.get_bus_index("Music"),true)
+		$Camera2D/Canvas/UI/AudiConteiner/MusicContainer/MusicIcon.texture = load("res://sprites/music_icon_mute.png")
 	else:
 		AudioServer.set_bus_mute(AudioServer.get_bus_index("Music"),false)
+		$Camera2D/Canvas/UI/AudiConteiner/MusicContainer/MusicIcon.texture = load("res://sprites/music_icon.png")
 
 
