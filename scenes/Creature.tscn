@@ -1,11 +1,11 @@
-[gd_scene load_steps=44 format=2]
+[gd_scene load_steps=46 format=2]
 
 [ext_resource path="res://scenes/Creature.gd" type="Script" id=1]
 [ext_resource path="res://sprites/ally_face.png" type="Texture" id=2]
 [ext_resource path="res://sprites/circle_64.png" type="Texture" id=3]
 [ext_resource path="res://sprites/upgrade_button_textures.png" type="Texture" id=4]
 [ext_resource path="res://sprites/reteating_test.png" type="Texture" id=5]
-[ext_resource path="res://misc/fonts/font.tres" type="DynamicFont" id=6]
+[ext_resource path="res://misc/fonts/Happy Selfie.ttf" type="DynamicFontData" id=6]
 [ext_resource path="res://sprites/particle.png" type="Texture" id=7]
 [ext_resource path="res://sounds/hitHurt4.wav" type="AudioStream" id=8]
 [ext_resource path="res://sounds/hitHurt1.wav" type="AudioStream" id=9]
@@ -37,8 +37,14 @@ radius = 50.0
 [sub_resource type="CircleShape2D" id=20]
 radius = 4000.0
 
+[sub_resource type="CircleShape2D" id=31]
+
 [sub_resource type="Curve" id=21]
 _data = [ Vector2( 0, 0.623864 ), 0.0, 0.0, 0, 0, Vector2( 0.881188, 0.596591 ), 0.0, -7.34546, 0, 0, Vector2( 1, 0 ), -5.06043, 0.0, 0, 0 ]
+
+[sub_resource type="DynamicFont" id=32]
+size = 72
+font_data = ExtResource( 6 )
 
 [sub_resource type="StyleBoxFlat" id=28]
 bg_color = Color( 0.164706, 0.164706, 0.164706, 0.54902 )
@@ -207,6 +213,42 @@ tracks/7/keys = {
 "update": 1,
 "values": [ false ]
 }
+tracks/8/type = "value"
+tracks/8/path = NodePath("../AttackArea:collision_layer")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 0 ]
+}
+tracks/9/type = "value"
+tracks/9/path = NodePath("../UIHolder:visible")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/10/type = "value"
+tracks/10/path = NodePath("../UIHolder/Control:visible")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
 
 [sub_resource type="Animation" id=24]
 resource_name = "attack"
@@ -328,6 +370,30 @@ tracks/1/keys = {
 "update": 0,
 "values": [ Vector2( 2, 2 ), Vector2( 2.4, 1.6 ), Vector2( 2.6, 1.4 ) ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("../UIHolder:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("../UIHolder/Control:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
 
 [sub_resource type="Animation" id=27]
 resource_name = "spawn"
@@ -410,6 +476,18 @@ tracks/5/keys = {
 "update": 0,
 "values": [ Vector2( 1.4, 1.4 ), Vector2( 2, 2 ) ]
 }
+tracks/6/type = "value"
+tracks/6/path = NodePath("../AttackArea:collision_layer")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 0, 1 ]
+}
 
 [sub_resource type="Animation" id=22]
 resource_name = "upgrade"
@@ -483,6 +561,7 @@ texture = ExtResource( 5 )
 polygon = PoolVector2Array( 0, 64, 48, 48, 64, 0, 48, -48, 0, -64, -48, -48, -64, 0, -48, 48 )
 
 [node name="ConsumeParticles" type="CPUParticles2D" parent="Polygon2D"]
+position = Vector2( -1, 0 )
 emitting = false
 amount = 16
 one_shot = true
@@ -517,6 +596,13 @@ collision_layer = 0
 
 [node name="VisionShape" type="CollisionShape2D" parent="DeadCheckArea"]
 shape = SubResource( 20 )
+
+[node name="AttackArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 0
+
+[node name="AttackShape" type="CollisionShape2D" parent="AttackArea"]
+shape = SubResource( 31 )
 
 [node name="BodySprite" type="Sprite" parent="."]
 visible = false
@@ -600,7 +686,7 @@ visible = false
 margin_right = 400.0
 margin_bottom = 200.0
 rect_min_size = Vector2( 400, 200 )
-custom_fonts/font = ExtResource( 6 )
+custom_fonts/font = SubResource( 32 )
 custom_styles/normal = SubResource( 28 )
 align = 1
 valign = 1
@@ -700,48 +786,60 @@ anims/upgrade = SubResource( 22 )
 
 [node name="HitSound1" type="AudioStreamPlayer" parent="HitSounds"]
 stream = ExtResource( 9 )
+bus = "Sound"
 
 [node name="HitSound2" type="AudioStreamPlayer" parent="HitSounds"]
 stream = ExtResource( 11 )
+bus = "Sound"
 
 [node name="HitSound3" type="AudioStreamPlayer" parent="HitSounds"]
 stream = ExtResource( 10 )
+bus = "Sound"
 
 [node name="HitSound4" type="AudioStreamPlayer" parent="HitSounds"]
 stream = ExtResource( 8 )
+bus = "Sound"
 
 [node name="LevelUpSounds" type="Node" parent="."]
 
 [node name="Up1" type="AudioStreamPlayer" parent="LevelUpSounds"]
 stream = ExtResource( 14 )
 volume_db = -16.0
+bus = "Sound"
 
 [node name="Up2" type="AudioStreamPlayer" parent="LevelUpSounds"]
 stream = ExtResource( 13 )
 volume_db = -16.0
+bus = "Sound"
 
 [node name="Up3" type="AudioStreamPlayer" parent="LevelUpSounds"]
 stream = ExtResource( 12 )
 volume_db = -8.0
+bus = "Sound"
 
 [node name="DeathSounds" type="Node" parent="."]
 
 [node name="Sound1" type="AudioStreamPlayer" parent="DeathSounds"]
 stream = ExtResource( 15 )
+bus = "Sound"
 
 [node name="EatSounds" type="Node" parent="."]
 
 [node name="Sound1" type="AudioStreamPlayer" parent="EatSounds"]
 stream = ExtResource( 16 )
+bus = "Sound"
 
 [node name="Sound2" type="AudioStreamPlayer" parent="EatSounds"]
 stream = ExtResource( 18 )
+bus = "Sound"
 
 [node name="Sound3" type="AudioStreamPlayer" parent="EatSounds"]
 stream = ExtResource( 17 )
+bus = "Sound"
 
 [connection signal="body_entered" from="." to="." method="_on_Creature_body_entered"]
 [connection signal="body_entered" from="VisionArea" to="." method="_on_VisionArea_body_entered"]
+[connection signal="body_entered" from="AttackArea" to="." method="_on_AttackArea_body_entered"]
 [connection signal="timeout" from="AttackTimer" to="." method="_on_AttackTimer_timeout"]
 [connection signal="timeout" from="DeathTimer" to="." method="_on_DeathTimer_timeout"]
 [connection signal="timeout" from="AnimTimer" to="." method="_on_AnimTimer_timeout"]

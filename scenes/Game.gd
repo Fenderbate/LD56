@@ -59,10 +59,8 @@ func spawn_creature(spawn_position : Vector2, type : int  = 0):
 		return
 	
 	if randi()%51 < wave_count:
-		print("Upgrade")
 		for index in randi() % 5:
 			creature_instance.apply_random_upgrade(randi() % 4)
-			print("added")
 	
 
 
@@ -74,7 +72,6 @@ func on_creature_dead(type : int):
 		enemy_count -= 1
 	elif type == 1:
 		ally_count -= 1
-		print(ally_count)
 	
 	
 	
@@ -91,7 +88,6 @@ func on_game_over():
 	$Camera2D/Canvas/UI/GameOver.show()
 
 func _on_SpawnerTimer_timeout():
-	print("NEW SPAWN")
 	
 	Global.emit_signal("wave_start")
 	
@@ -117,3 +113,63 @@ func _on_AnimTimer_timeout():
 
 func _on_Button_button_down():
 	get_tree().reload_current_scene()
+
+
+
+
+func _on_SoundIcon_mouse_entered():
+	$Camera2D/Canvas/UI/AudiConteiner/SoundContainer/SoundSlider.show()
+
+
+func _on_MusicIcon_mouse_entered():
+	$Camera2D/Canvas/UI/AudiConteiner/MusicContainer/MusicSlider.show()
+
+
+func _on_SoundIcon_gui_input(event):
+	if event is InputEventMouseButton and event.pressed:
+		AudioServer.set_bus_mute(AudioServer.get_bus_index("Sound"),!AudioServer.is_bus_mute(AudioServer.get_bus_index("Sound")))
+		if AudioServer.is_bus_mute(AudioServer.get_bus_index("Sound")):
+			$Camera2D/Canvas/UI/AudiConteiner/SoundContainer/SoundIcon.texture = load("res://sprites/sound_icon_mute.png")
+		else:
+			$Camera2D/Canvas/UI/AudiConteiner/SoundContainer/SoundIcon.texture = load("res://sprites/sound_icon.png")
+
+func _on_MusicIcon_gui_input(event):
+	if event is InputEventMouseButton and event.pressed:
+		AudioServer.set_bus_mute(AudioServer.get_bus_index("Music"),!AudioServer.is_bus_mute(AudioServer.get_bus_index("Music")))
+		if AudioServer.is_bus_mute(AudioServer.get_bus_index("Music")):
+			$Camera2D/Canvas/UI/AudiConteiner/MusicContainer/MusicIcon.texture = load("res://sprites/music_icon_mute.png")
+		else:
+			$Camera2D/Canvas/UI/AudiConteiner/MusicContainer/MusicIcon.texture = load("res://sprites/music_icon.png")
+
+
+func _on_SoundSlider_mouse_exited():
+	$Camera2D/Canvas/UI/AudiConteiner/SoundContainer/SoundSlider.hide()
+
+
+func _on_MusicSlider_mouse_exited():
+	$Camera2D/Canvas/UI/AudiConteiner/MusicContainer/MusicSlider.hide()
+
+
+func _on_SoundIcon_mouse_exited():
+	pass#$Camera2D/Canvas/UI/AudiConteiner/SoundContainer/SoundSlider.hide()
+
+
+func _on_MusicIcon_mouse_exited():
+	pass#$Camera2D/Canvas/UI/AudiConteiner/MusicContainer/MusicSlider.hide()
+
+
+func _on_SoundSlider_value_changed(value):
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Sound"),-25 + 25 * value)
+	if value == -1:
+		AudioServer.set_bus_mute(AudioServer.get_bus_index("Sound"),true)
+	else:
+		AudioServer.set_bus_mute(AudioServer.get_bus_index("Sound"),false)
+
+func _on_MusicSlider_value_changed(value):
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"),-25 + 25 * value)
+	if value == -1:
+		AudioServer.set_bus_mute(AudioServer.get_bus_index("Music"),true)
+	else:
+		AudioServer.set_bus_mute(AudioServer.get_bus_index("Music"),false)
+
+

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://scenes/Creature.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/Game.gd" type="Script" id=2]
@@ -7,6 +7,16 @@
 [ext_resource path="res://sounds/music.wav" type="AudioStream" id=5]
 [ext_resource path="res://sounds/new_wave.wav" type="AudioStream" id=6]
 [ext_resource path="res://misc/ButtonStyle.tres" type="StyleBox" id=7]
+[ext_resource path="res://sprites/sound_icon.png" type="Texture" id=8]
+[ext_resource path="res://sprites/music_icon.png" type="Texture" id=9]
+[ext_resource path="res://sprites/slider_head.png" type="Texture" id=10]
+[ext_resource path="res://sprites/slider_tick.png" type="Texture" id=11]
+
+[sub_resource type="StyleBoxEmpty" id=2]
+
+[sub_resource type="StyleBoxEmpty" id=3]
+
+[sub_resource type="StyleBoxEmpty" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 1586.5, 27.5 )
@@ -103,6 +113,73 @@ text = "Retry"
 align = 1
 valign = 1
 
+[node name="AudiConteiner" type="VBoxContainer" parent="Camera2D/Canvas/UI"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="SoundContainer" type="HBoxContainer" parent="Camera2D/Canvas/UI/AudiConteiner"]
+margin_right = 324.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 324, 64 )
+
+[node name="SoundIcon" type="TextureRect" parent="Camera2D/Canvas/UI/AudiConteiner/SoundContainer"]
+margin_right = 64.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 64, 64 )
+texture = ExtResource( 8 )
+
+[node name="SoundSlider" type="HSlider" parent="Camera2D/Canvas/UI/AudiConteiner/SoundContainer"]
+visible = false
+margin_left = 68.0
+margin_right = 324.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 256, 64 )
+mouse_filter = 1
+custom_icons/tick = ExtResource( 11 )
+custom_icons/grabber_disabled = ExtResource( 10 )
+custom_icons/grabber_highlight = ExtResource( 10 )
+custom_icons/grabber = ExtResource( 10 )
+custom_styles/slider = SubResource( 2 )
+custom_styles/grabber_area_highlight = SubResource( 3 )
+custom_styles/grabber_area = SubResource( 4 )
+min_value = -1.0
+max_value = 1.0
+step = 0.1
+tick_count = 10
+ticks_on_borders = true
+
+[node name="MusicContainer" type="HBoxContainer" parent="Camera2D/Canvas/UI/AudiConteiner"]
+margin_top = 68.0
+margin_right = 324.0
+margin_bottom = 132.0
+rect_min_size = Vector2( 324, 64 )
+
+[node name="MusicIcon" type="TextureRect" parent="Camera2D/Canvas/UI/AudiConteiner/MusicContainer"]
+margin_right = 64.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 64, 64 )
+texture = ExtResource( 9 )
+
+[node name="MusicSlider" type="HSlider" parent="Camera2D/Canvas/UI/AudiConteiner/MusicContainer"]
+visible = false
+margin_left = 68.0
+margin_right = 324.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 256, 64 )
+mouse_filter = 1
+custom_icons/tick = ExtResource( 11 )
+custom_icons/grabber_disabled = ExtResource( 10 )
+custom_icons/grabber_highlight = ExtResource( 10 )
+custom_icons/grabber = ExtResource( 10 )
+custom_styles/slider = SubResource( 2 )
+custom_styles/grabber_area_highlight = SubResource( 3 )
+custom_styles/grabber_area = SubResource( 4 )
+min_value = -1.0
+max_value = 1.0
+step = 0.1
+tick_count = 10
+ticks_on_borders = true
+
 [node name="AllyCreature" parent="." instance=ExtResource( 1 )]
 position = Vector2( -125, -124 )
 char_type = 1
@@ -150,11 +227,23 @@ shape = SubResource( 1 )
 stream = ExtResource( 5 )
 volume_db = 8.0
 autoplay = true
+bus = "Music"
 
 [node name="NewWavePlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 6 )
 volume_db = -8.0
+bus = "Sound"
 
 [connection signal="timeout" from="Timers/SpawnerTimer" to="." method="_on_SpawnerTimer_timeout"]
 [connection signal="timeout" from="Timers/AnimTimer" to="." method="_on_AnimTimer_timeout"]
 [connection signal="button_down" from="Camera2D/Canvas/UI/GameOver/Button" to="." method="_on_Button_button_down"]
+[connection signal="gui_input" from="Camera2D/Canvas/UI/AudiConteiner/SoundContainer/SoundIcon" to="." method="_on_SoundIcon_gui_input"]
+[connection signal="mouse_entered" from="Camera2D/Canvas/UI/AudiConteiner/SoundContainer/SoundIcon" to="." method="_on_SoundIcon_mouse_entered"]
+[connection signal="mouse_exited" from="Camera2D/Canvas/UI/AudiConteiner/SoundContainer/SoundIcon" to="." method="_on_SoundIcon_mouse_exited"]
+[connection signal="mouse_exited" from="Camera2D/Canvas/UI/AudiConteiner/SoundContainer/SoundSlider" to="." method="_on_SoundSlider_mouse_exited"]
+[connection signal="value_changed" from="Camera2D/Canvas/UI/AudiConteiner/SoundContainer/SoundSlider" to="." method="_on_SoundSlider_value_changed"]
+[connection signal="gui_input" from="Camera2D/Canvas/UI/AudiConteiner/MusicContainer/MusicIcon" to="." method="_on_MusicIcon_gui_input"]
+[connection signal="mouse_entered" from="Camera2D/Canvas/UI/AudiConteiner/MusicContainer/MusicIcon" to="." method="_on_MusicIcon_mouse_entered"]
+[connection signal="mouse_exited" from="Camera2D/Canvas/UI/AudiConteiner/MusicContainer/MusicIcon" to="." method="_on_MusicIcon_mouse_exited"]
+[connection signal="mouse_exited" from="Camera2D/Canvas/UI/AudiConteiner/MusicContainer/MusicSlider" to="." method="_on_MusicSlider_mouse_exited"]
+[connection signal="value_changed" from="Camera2D/Canvas/UI/AudiConteiner/MusicContainer/MusicSlider" to="." method="_on_MusicSlider_value_changed"]

@@ -55,6 +55,7 @@ func _ready():
 	$UIHolder/Control/Container/LevelContainer/Level4Texture.texture.atlas = load("res://sprites/level_indicator.png")
 	
 	$Shape.shape = $Shape.shape.duplicate()
+	$AttackArea/AttackShape.shape = $AttackArea/AttackShape.shape.duplicate()
 	
 	sprite_array = $Polygon2D.polygon
 	
@@ -70,6 +71,13 @@ func _ready():
 	
 
 func _process(delta):
+		
+		if !self.dead:
+			$AttackArea/AttackShape.shape.radius = $Shape.shape.radius + 16
+			
+			for body in $AttackArea.get_overlapping_bodies():
+				if body is RigidBody2D and !body.consumed and body.char_type != self.char_type:
+					attack(body)
 		
 		if dead and !is_in_group("dead_creature"):
 			add_to_group("dead_creature")
@@ -120,7 +128,6 @@ func find_snacks():
 				consume_target = weakref(body)
 	
 	if consume_target:
-		print(consume_target.get_ref().global_position)
 		target = consume_target
 		move(target.get_ref().global_position)
 	
@@ -134,8 +141,8 @@ func move(target_position : Vector2, recenter : bool = false):
 		linear_velocity = linear_velocity + (direction * speed * get_physics_process_delta_time() if linear_velocity.length() < (direction * speed).length() * 2 else Vector2.ZERO)
 		
 	else:
-		pass
-				
+		if target and target.get_ref():
+			attack(target.get_ref())
 	
 
 func find_target():
@@ -155,6 +162,25 @@ func find_target():
 		return true
 	
 	return false
+
+func attack(target_node):
+	
+	if target_node is StaticBody2D:
+		return
+	
+	if self.char_type == target_node.char_type or self.dead or self.consumed:
+		return
+	
+	if $AttackTimer.time_left <= 0 and target_node:
+			$AttackTimer.start()
+			if !target_node.dead:
+				target_node.apply_central_impulse(global_position.direction_to(target_node.global_position)* knockback)
+				target_node.hurt(damage,self)
+				$HitSounds.get_children()[randi() % $HitSounds.get_child_count()].play()
+				$Animations/AnimationPlayer.play("attack")
+			elif target_node.dead:
+				consume(target_node)
+	
 
 func hurt(damage : int, hurt_by : RigidBody2D = null):
 	
@@ -191,7 +217,6 @@ func consume(consume_target):
 	consume_target.collision_mask = 0
 	consume_target.input_pickable = false
 	
-	print("make eating animation, and eaten sprite")
 	
 	$EatSounds.get_children()[randi() % $EatSounds.get_child_count()].play()
 	
@@ -274,6 +299,7 @@ func upgrade_size():
 	#$Polygon2D.polygon = new_poly
 	
 	$Shape.shape.radius += 32
+	$AttackArea/AttackShape.shape.radius = $Shape.shape.radius + 16
 	$FaceSprite.offset.y += 8
 	texture_anim_offset += 2
 	weight += 1
@@ -303,7 +329,7 @@ func upgrade_damage():
 func upgrade_duplicate():
 	
 	#get_parent().add_child(self.duplicate())
-	print("make visual change, don't allow more dupes")
+	#print("make visual change, don't allow more dupes")
 	
 	update_level(-4)
 	
@@ -330,8 +356,6 @@ func _on_DeathTimer_timeout():
 func _on_VisionArea_body_entered(body):
 	if is_instance_valid(body) and !target and body.char_type != self.char_type:
 		
-		if self.char_type == TYPE.ALLY:
-			print(body)
 		
 		move(body.global_position)
 		target = weakref(body)
@@ -361,22 +385,8 @@ func _on_AnimTimer_timeout():
 
 
 func _on_Creature_body_entered(body):
-	
-	if body is StaticBody2D:
-		return
-	
-	if self.char_type == body.char_type or self.dead or self.consumed:
-		return
-	
-	if $AttackTimer.time_left <= 0 and body:
-			$AttackTimer.start()
-			if !body.dead:
-				body.apply_central_impulse(global_position.direction_to(body.global_position)* knockback)
-				body.hurt(damage,self)
-				$HitSounds.get_children()[randi() % $HitSounds.get_child_count()].play()
-				$Animations/AnimationPlayer.play("attack")
-			elif body.dead:
-				consume(body)
+	return
+	attack(body)
 
 
 func _on_EatTimer_timeout():
@@ -422,3 +432,8 @@ func _on_HealButton_mouse_entered():
 
 func reset_label_info():
 	update_info_label("")
+
+
+func _on_AttackArea_body_entered(body):
+	return
+	attack(body)
