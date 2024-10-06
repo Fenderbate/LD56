@@ -1,0 +1,91 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://scenes/Creature.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/Game.gd" type="Script" id=2]
+[ext_resource path="res://misc/fonts/font.tres" type="DynamicFont" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 1586.5, 27.5 )
+
+[node name="Game" type="Node2D"]
+script = ExtResource( 2 )
+creature_path = "res://scenes/Creature.tscn"
+
+[node name="Timers" type="Node" parent="."]
+
+[node name="SpawnerTimer" type="Timer" parent="Timers"]
+wait_time = 5.0
+one_shot = true
+autostart = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+zoom = Vector2( 3, 3 )
+
+[node name="Canvas" type="CanvasLayer" parent="Camera2D"]
+
+[node name="UI" type="Control" parent="Camera2D/Canvas"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 1024, 1024 )
+mouse_filter = 2
+
+[node name="SpawnTimerLabel" type="Label" parent="Camera2D/Canvas/UI"]
+anchor_right = 1.0
+margin_bottom = 49.0
+rect_min_size = Vector2( 200, 50 )
+custom_fonts/font = ExtResource( 3 )
+align = 1
+valign = 1
+
+[node name="AllyCreature" parent="." instance=ExtResource( 1 )]
+position = Vector2( 1, 4 )
+char_type = 1
+health = 10
+damage = 2
+levels = 20
+
+[node name="AllyCreature2" parent="." instance=ExtResource( 1 )]
+position = Vector2( -163, -216 )
+char_type = 1
+health = 10
+damage = 2
+
+[node name="AllyCreature3" parent="." instance=ExtResource( 1 )]
+position = Vector2( 193, -64 )
+char_type = 1
+health = 10
+damage = 2
+
+[node name="AllyCreature4" parent="." instance=ExtResource( 1 )]
+position = Vector2( -75, 244 )
+char_type = 1
+health = 10
+damage = 2
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2( -3, 1548 )
+rotation = 6.28319
+shape = SubResource( 1 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2( 1, -1555 )
+rotation = -3.14181
+shape = SubResource( 1 )
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2( 1572, 1 )
+rotation = 4.71239
+shape = SubResource( 1 )
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2( -1566, -2 )
+rotation = 1.57185
+shape = SubResource( 1 )
+
+[node name="SpawnerContainer" type="Node2D" parent="."]
+
+[connection signal="timeout" from="Timers/SpawnerTimer" to="." method="_on_SpawnerTimer_timeout"]
