@@ -60,9 +60,9 @@ func _ready():
 	
 	match char_type:
 		TYPE.ENEMY:
-			$Polygon2D.self_modulate = Color("e87f66")
+			$Polygon2D.self_modulate = Color("F94144")
 		TYPE.ALLY:
-			$Polygon2D.self_modulate = Color("addbff")
+			$Polygon2D.self_modulate = Color("F9C74F")
 	
 	$VisionArea/VisionShape.shape.radius = vision_range
 	
@@ -165,8 +165,8 @@ func hurt(damage : int, hurt_by : RigidBody2D = null):
 		add_to_group("dead_creature")
 		dead = true
 		$AnimTimer.stop()
+		Global.emit_signal("creature_dead",char_type)
 		if self.char_type == TYPE.ENEMY:
-			Global.emit_signal("creature_dead")
 			$FaceSprite.texture = load("res://sprites/enemy_face_dead.png")
 		else:
 			$FaceSprite.texture = load("res://sprites/ally_face_dead.png")
@@ -251,6 +251,17 @@ func show_upgrade():
 	else:
 		ug.show()
 
+func apply_random_upgrade(upgrade_index):
+	
+	match upgrade_index:
+		1:
+			upgrade_size()
+		2:
+			upgrade_damage()
+		3:
+			upgrade_duplicate()
+	
+
 func upgrade_size():
 	
 	#for index in sprite_array.size():
@@ -292,7 +303,7 @@ func upgrade_duplicate():
 	
 	update_level(-4)
 	
-	Global.emit_signal("spawn_ally_creature",global_position)
+	Global.emit_signal("spawn_creature",global_position,char_type)
 
 func upgrade_heal():
 	
@@ -326,7 +337,11 @@ func on_wave_start():
 
 func update_info_label(new_text = ""):
 	
-	$UIHolder/Control/Container/InfoContainer/Label.text = new_text
+	if new_text == "":
+		$UIHolder/Control/Container/InfoContainer/Label.hide()
+	else:
+		$UIHolder/Control/Container/InfoContainer/Label.show()
+		$UIHolder/Control/Container/InfoContainer/Label.text = new_text
 	
 
 func _on_AnimTimer_timeout():

@@ -31,7 +31,8 @@ Global="*res://scenes/Global.gd"
 [display]
 
 window/size/height=1024
-window/stretch/aspect="expand"
+window/stretch/mode="viewport"
+window/stretch/aspect="keep"
 
 [gui]
 

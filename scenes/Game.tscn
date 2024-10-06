@@ -1,8 +1,21 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://scenes/Creature.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/Game.gd" type="Script" id=2]
 [ext_resource path="res://misc/fonts/font.tres" type="DynamicFont" id=3]
+[ext_resource path="res://sprites/grass_tile.png" type="Texture" id=4]
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.164706, 0.164706, 0.164706, 0.54902 )
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+corner_radius_top_left = 32
+corner_radius_top_right = 32
+corner_radius_bottom_right = 32
+corner_radius_bottom_left = 32
+corner_detail = 2
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 1586.5, 27.5 )
@@ -11,11 +24,20 @@ extents = Vector2( 1586.5, 27.5 )
 script = ExtResource( 2 )
 creature_path = "res://scenes/Creature.tscn"
 
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color( 0.564706, 0.745098, 0.427451, 1 )
+texture = ExtResource( 4 )
+texture_scale = Vector2( 0.3, 0.3 )
+polygon = PoolVector2Array( -1657, -1619, 1667, -1644, 1642, 1681, -1697, 1699 )
+
 [node name="Timers" type="Node" parent="."]
 
 [node name="SpawnerTimer" type="Timer" parent="Timers"]
 wait_time = 5.0
 one_shot = true
+autostart = true
+
+[node name="AnimTimer" type="Timer" parent="Timers"]
 autostart = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -38,27 +60,68 @@ custom_fonts/font = ExtResource( 3 )
 align = 1
 valign = 1
 
+[node name="GameOver" type="Control" parent="Camera2D/Canvas/UI"]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -200.0
+margin_top = -150.0
+margin_right = 200.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 400, 300 )
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="Camera2D/Canvas/UI/GameOver"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -200.0
+margin_top = -25.0
+margin_right = 200.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 200, 50 )
+custom_fonts/font = ExtResource( 3 )
+text = "Game Over"
+align = 1
+valign = 1
+
+[node name="Button" type="Button" parent="Camera2D/Canvas/UI/GameOver"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -95.0
+margin_top = 23.0
+margin_right = 96.0
+margin_bottom = 76.0
+custom_styles/normal = SubResource( 2 )
+
+[node name="Label2" type="Label" parent="Camera2D/Canvas/UI/GameOver/Button"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 200, 50 )
+custom_fonts/font = ExtResource( 3 )
+text = "Retry"
+align = 1
+valign = 1
+
 [node name="AllyCreature" parent="." instance=ExtResource( 1 )]
-position = Vector2( 1, 4 )
+position = Vector2( -95, 115 )
 char_type = 1
 health = 10
 damage = 2
-levels = 20
 
 [node name="AllyCreature2" parent="." instance=ExtResource( 1 )]
-position = Vector2( -163, -216 )
+position = Vector2( -84, -102 )
 char_type = 1
 health = 10
 damage = 2
 
 [node name="AllyCreature3" parent="." instance=ExtResource( 1 )]
-position = Vector2( 193, -64 )
-char_type = 1
-health = 10
-damage = 2
-
-[node name="AllyCreature4" parent="." instance=ExtResource( 1 )]
-position = Vector2( -75, 244 )
+position = Vector2( 104, -2 )
 char_type = 1
 health = 10
 damage = 2
@@ -89,3 +152,5 @@ shape = SubResource( 1 )
 [node name="SpawnerContainer" type="Node2D" parent="."]
 
 [connection signal="timeout" from="Timers/SpawnerTimer" to="." method="_on_SpawnerTimer_timeout"]
+[connection signal="timeout" from="Timers/AnimTimer" to="." method="_on_AnimTimer_timeout"]
+[connection signal="button_down" from="Camera2D/Canvas/UI/GameOver/Button" to="." method="_on_Button_button_down"]

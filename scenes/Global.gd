@@ -3,9 +3,11 @@ extends Node
 
 signal creature_dead(type)
 
-signal spawn_ally_creature(position)
+signal spawn_creature(position, type)
 
 signal wave_start()
+
+signal game_over()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

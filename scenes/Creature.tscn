@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://scenes/Creature.gd" type="Script" id=1]
 [ext_resource path="res://sprites/ally_face.png" type="Texture" id=2]
@@ -23,7 +23,20 @@ radius = 50.0
 radius = 4000.0
 
 [sub_resource type="Curve" id=21]
-_data = [ Vector2( 0, 0.623864 ), 0.0, 0.0, 0, 0, Vector2( 0.584158, 0.377273 ), -0.0301043, -1.24225, 0, 0, Vector2( 1, 0 ), -0.104339, 0.0, 0, 0 ]
+_data = [ Vector2( 0, 0.623864 ), 0.0, 0.0, 0, 0, Vector2( 0.881188, 0.596591 ), 0.0, -7.34546, 0, 0, Vector2( 1, 0 ), -5.06043, 0.0, 0, 0 ]
+
+[sub_resource type="StyleBoxFlat" id=28]
+bg_color = Color( 0.164706, 0.164706, 0.164706, 0.54902 )
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color( 1, 1, 1, 1 )
+corner_radius_top_left = 32
+corner_radius_top_right = 32
+corner_radius_bottom_right = 32
+corner_radius_bottom_left = 32
+corner_detail = 2
 
 [sub_resource type="AtlasTexture" id=4]
 flags = 4
@@ -452,14 +465,10 @@ visible = false
 scale = Vector2( 2, 2 )
 texture = ExtResource( 3 )
 
-[node name="FaceSprite" type="Sprite" parent="."]
-scale = Vector2( 2, 2 )
-texture = ExtResource( 2 )
-
 [node name="UpgradeParticles" type="CPUParticles2D" parent="."]
 emitting = false
-amount = 16
-lifetime = 0.7
+lifetime = 0.5
+one_shot = true
 explosiveness = 1.0
 randomness = 0.54
 lifetime_randomness = 1.0
@@ -468,16 +477,19 @@ local_coords = false
 texture = ExtResource( 7 )
 emission_shape = 1
 emission_sphere_radius = 64.0
-direction = Vector2( 0, -1 )
-spread = 30.0
+direction = Vector2( 1, 1 )
+spread = 180.0
 gravity = Vector2( 0, 0 )
-initial_velocity = 250.0
-initial_velocity_random = 1.0
+initial_velocity = 400.0
+initial_velocity_random = 0.3
 linear_accel = 10.0
-linear_accel_random = 1.0
 scale_amount_random = 1.0
 scale_amount_curve = SubResource( 21 )
-color = Color( 1, 0.968627, 0.737255, 1 )
+color = Color( 0.956863, 0.941176, 0.47451, 1 )
+
+[node name="FaceSprite" type="Sprite" parent="."]
+scale = Vector2( 2, 2 )
+texture = ExtResource( 2 )
 
 [node name="AttackTimer" type="Timer" parent="."]
 wait_time = 0.5
@@ -526,10 +538,12 @@ mouse_filter = 2
 alignment = 1
 
 [node name="Label" type="Label" parent="UIHolder/Control/Container/InfoContainer"]
+visible = false
 margin_right = 400.0
 margin_bottom = 200.0
 rect_min_size = Vector2( 400, 200 )
 custom_fonts/font = ExtResource( 6 )
+custom_styles/normal = SubResource( 28 )
 align = 1
 valign = 1
 autowrap = true
@@ -544,8 +558,8 @@ alignment = 1
 
 [node name="SizeButton" type="TextureButton" parent="UIHolder/Control/Container/UpgradeButtonContainer"]
 visible = false
-margin_left = 152.0
-margin_right = 248.0
+margin_left = 2.0
+margin_right = 98.0
 margin_bottom = 96.0
 rect_min_size = Vector2( 96, 96 )
 texture_normal = SubResource( 4 )
